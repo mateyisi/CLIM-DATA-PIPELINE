@@ -12,6 +12,9 @@ OUTFILE="outfile"
 
 OUTFILESUB="FLUX"
 
+STARTDATE=2035-01-01T06:00:00
+ENDDATE=2035-06-31T00:00:00
+
 time_average(){
 
 #create array for user inputs. $FILES and $PAREAM and $PATH  given for testing
@@ -20,6 +23,8 @@ PAR_arr=("${!2}")
 DIR_PATH=$3
 OUT_FILE=$4
 OUT_FILESUB=$5
+STT_DATE=$6
+END_DATE=$7
 
 cd $DIR_PATH #enter main directory
 
@@ -56,16 +61,18 @@ foldernames=$( '/bin/ls' )
 
            for i in "${PAR_arr[@]}"
   	     	do 
-    	     	 # echo "extracting $i timeseries from $file "
+    	     	 echo "*************extracting $i timeseries from $file****************************"
                  # call cdo operators for parameter selection and merging files to form a time series.
  
                   /usr/bin/cdo -select,name=$i *.nc $i"_"$file"_SIXHOURLY.nc"
-     	          #cdo -seasmean -settaxis,2035-01-01,00:00:00,1month -monmean -shifttime,1sec -daymean -shifttime,-1sec $i-SIXHOURLY.nc $PATH$file/FLUX/$file/FLUX/SEASNAL/"ccam_$model-RCP45-$i-SEASAV-203501_209912-.nc"
-                  /usr/bin/cdo monmean -shifttime,1sec -daymean -shifttime,-1sec $i"_"$file"_SIXHOURLY.nc" $i"_"$file"_monthly.nc"
+                  /usr/bin/cdo -seldate,$STT_DATE,$END_DATE $i"_"$file"_SIXHOURLY.nc" $i"_"$file"_SIXHOURLY_"$STT_DATE"-"$END_DATE".nc"
+     	          # xcdo -seasmean -settaxis,2035-01-01,00:00:00,1month -monmean -shifttime,1sec -daymean -shifttime,-1sec $i-SIXHOURLY.nc $PATH$file/FLUX/$file/FLUX/SEASNAL/"ccam_$model-RCP45-$i-SEASAV-203501_209912-.nc"
+                  /usr/bin/cdo monmean -shifttime,1sec -daymean -shifttime,-1sec $i"_"$file"_SIXHOURLY_"$STT_DATE"-"$END_DATE".nc" $i"_"$file"_monthly_"$STT_DATE"-"$END_DATE".nc"
 
-     	          /bin/rm *_SIXHOURLY.nc
+     	          /bin/rm *_SIXHOURLY_$STT_DATE"-"$END_DATE".nc"
+                  /bin/rm *_SIXHOURLY.nc
 
-                  /bin/mv *monthly.nc $DIR_PATH/$OUT_FILE/$OUT_FILESUB
+                  /bin/mv *_monthly_$STT_DATE"-"$END_DATE".nc" $DIR_PATH/$OUT_FILE/$OUT_FILESUB
            done
      fi
    fi
@@ -75,5 +82,5 @@ foldernames=$( '/bin/ls' )
 }
 
 #uncomment for stand alone testing
-#time_average "FILES[@]" "PARAM[@]" "$PATH" "$OUTFILE" "$OUTFILESUB" 
+#time_average "FILES[@]" "PARAM[@]" "$PATH" "$OUTFILE" "$OUTFILESUB" "$STARTDATE" "$ENDDATE" 
 

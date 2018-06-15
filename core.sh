@@ -89,14 +89,16 @@ case ${DICT[OPERATIONS]} in
                  DIR_PATH=$(echo ${DICT[PATHTODIRECTORY]})
                  DIR_OUT=$(echo ${DICT[OUTPUTFILE]})
                  DIR_OUTSUB=$(echo ${DICT[LOWESTDIRECTORY]})
+                 TIMEPERIOD=($(echo ${DICT[TIMEINTERVAL]} | tr ";" " "))
 
                  echo "The parameter(s) ${PAR_arr[@]} will be extracted from multiple files and merged into the respective single file(s)"
                  echo "data in the file(s):  ${DIR_arr[@]} will be processed and saved IN file 'INPUT' within the given path"
+                 echo "The selected sime period start in ${TIMEPERIOD[0]} and it ends in ${TIMEPERIOD[1]}"
                  read -p "Continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 1
                 
                 source ./dotimeaverage.sh
  
-                time_average "DIR_arr[@]" "PAR_arr[@]" "$DIR_PATH" "$DIR_OUT" "$DIR_OUTSUB"
+                time_average "DIR_arr[@]" "PAR_arr[@]" "$DIR_PATH" "$DIR_OUT" "$DIR_OUTSUB" "${TIMEPERIOD[0]}" "${TIMEPERIOD[1]}"
                
                 ;;
 	*)

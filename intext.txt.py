@@ -23,9 +23,9 @@ LOWESTDIRECTORY $ FLUX
 
 OPERATIONS $ AverageTemporally
 
-# STARTING SOUECE DATA time scale (default for CORDEX data is SIXHOURLY): potions: SIXHOURLY, DAILLY, MONTHLY
+# STARTING Data time scale: SIXHOURLY, DAILLY, MONTHLY
  
-STARTINGDATA $ SixHourly
+STARTINGDATA $ SIXHOURLY
 
 # FOR Temporal AVEAGIONG: possible output timescales are: sixhourly, dailly_sum, dailly_average, monthly_sum, longterm_monthly_sum,
 # longterm_monthly_sum, annual_average, annual_sum, longterm_annual_sum, longterm_annual_average, wmoseas_mean,wmoseas_sum
@@ -44,7 +44,7 @@ REGRIDBY $ na
 # Set TIME INTERVAL (Date Format:yyy-mm-dd,hr:mn:sc)
 # for data merge operation: default option is; NA
 
-TIMEINTERVAL $ 2000-10-01,00:00:00; 2000-10-2010,00:00:00
+TIMEINTERVAL $ 2035-10-01T00:00:00; 2036-12-2010T00:00:00
 
 # for subsetting operations give new data spataial EXTENT 
 #(Cordinate Format: deg.sc, Order east-lontitude; lat-west-longitude; South-longitude)
