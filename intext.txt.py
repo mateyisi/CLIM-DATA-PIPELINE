@@ -19,13 +19,13 @@ OUTPUTFILE $ out
 LOWESTDIRECTORY $ FLUX
 
 #****************************************************DATA OPERATIONS************************************************
-# Data OPREATIONS : Options; SelectExtent; AverageTemporally; AverageSpatially, Regrid
+# Data OPREATIONS : Options; SelectExtent, AverageTemporally, AverageSpatially, Regrid
 
 OPERATIONS $ AverageTemporally
 
 # STARTING Data time scale: SIXHOURLY, DAILLY, MONTHLY
  
-STARTINGDATA $ SIXHOURLY
+STARTINGTIMESCALE $ SIXHOURLY
 
 # FOR Temporal AVEAGIONG: possible output timescales are: sixhourly, dailly_sum, dailly_average, monthly_sum, longterm_monthly_sum,
 # longterm_monthly_sum, annual_average, annual_sum, longterm_annual_sum, longterm_annual_average, wmoseas_mean,wmoseas_sum
@@ -42,7 +42,7 @@ REGRIDBY $ na
 #********************************************** OUTPUT DATA CHARACTERISTIC EXTENT***************************************
 
 # Set TIME INTERVAL (Date Format:yyy-mm-dd,hr:mn:sc)
-# for data merge operation: default option is; NA
+# Note that if your time interval is larger than that of the data the maximum data interval will be returned
 
 TIMEINTERVAL $ 2035-10-01T00:00:00; 2036-12-2010T00:00:00
 
