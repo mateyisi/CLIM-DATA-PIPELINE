@@ -1,0 +1,700 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>User documentation &#8212; Data pipelineClimate Data Pipeline 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Pipeline GUI implimentation" href="code.html" />
+    <link rel="prev" title="Project Summary" href="project.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="user-documentation">
+<h1>User documentation<a class="headerlink" href="#user-documentation" title="Permalink to this headline">¶</a></h1>
+<p>In this section, a brief explanation of the compound operators and a link to the consituent CDO sub-operators is presented. For a detailed description about CDO operators, the reader is adviced to refer to the CDO user manual.
+Here we explain key feature of the compound operators and presenting CDO categories that fall under each compound operator. we also demostrate how the pipeline’s graphical user interface can be used to semi-automate the analysis based on a selected few examples. After familiarizing with the recommended input and output file structure for multiple file processing, the reader will also get a feel of various options available for semi-automation of spatial-data analysis. This is presented under the <strong>Compound operators options</strong> section.</p>
+<div class="section" id="build-from-sources">
+<h2>Build from sources<a class="headerlink" href="#build-from-sources" title="Permalink to this headline">¶</a></h2>
+<p>Here we explain how to setup the pipeline.</p>
+</div>
+<div class="section" id="user-inputs">
+<h2>User inputs<a class="headerlink" href="#user-inputs" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="input-and-ouput-file-structure">
+<h3>Input and ouput file structure<a class="headerlink" href="#input-and-ouput-file-structure" title="Permalink to this headline">¶</a></h3>
+<p>The input filing convension for the pipeline follows a three level structure in which the
+top level is a parent folder, the mid-level is dedicate to the ensemble members and the the bottom level
+for each member host data containing directories.</p>
+<p>Let us consider the case when we have to calculated annual means given 10 years worth of
+temperature and precipitation hourly data from the ensemble members: Model 1, Model 2, Model 3 up to Model n.
+Then according to the above filing convension, the input NetCDF files containing the timeseries for temperature and precipiation is filed as shown in fig.1</p>
+<img alt="_images/dir_struc.jpg" src="_images/dir_struc.jpg" />
+<p>Fig.1</p>
+<p>In an instance where the NetCDF files are such that each contain multiple parameters,
+in which case both temerature and precipitation are in one NetCDF file, there will be only one directory
+at level 3 which contain the NetCDFs, instead of two.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The multi-model analysis semi-automation works only if there are no data gaps for the specified period and region for each of the models.</p>
+</div>
+<p>Next, we demonstrate how to use the pipeline’s graphical user interface to key in the input and output spatio-temporal specications as well as the input options under each compound operator. The GUI also capture meta data for the labeling of outout files
+hence enabling reproducibility of the data analysis steps.</p>
+</div>
+<div class="section" id="output-spatial-extent">
+<h3>Output spatial extent<a class="headerlink" href="#output-spatial-extent" title="Permalink to this headline">¶</a></h3>
+<img alt="_images/input_specs3.png" src="_images/input_specs3.png" />
+<p>Fig.2.</p>
+<p>The left blue panel present a categorical description of the user inputs on the right. On the first pane, we have for example:</p>
+<ol class="arabic simple">
+<li><strong>Parent directory</strong>: by selecting the ‘browse’ button a navigation window for choosing the parent directory opens up. In Fig.1 the top directory is ‘DATAMY’, the level two directories are ACC-RCP45, CCS-RCP45, CNR-RCP45, GFD-RCP45, MPI-RCP45 and NOR-RCP45. Each of the level two directories contain a comomon ‘data container’ sub-directory. As an example, in this case, it is called ‘FLUX’.</li>
+<li><strong>Region Name</strong>: this is a text entry which will be used in the naming of the output NetCDF files. e.g., In Fig. 2 the region name ‘Africa’ is supplied and it will feature in all output NetCDF files.</li>
+<li><strong>Output region cord.</strong>:  these are numeric inputs specifying the spatial extent of the output. The analysis domain will have to be a subset of the input data domain at all times.</li>
+<li><strong>Output point cord.</strong>:   by selection this option entry boxes for entering the longitude and latitudes of a grid box are displayed.</li>
+<li><strong>commit</strong>: upon pressing the ‘commit’ button cosistency checks on the inputs are made and error messages are raised expecially in in the case of missing values or unexpected input types.</li>
+</ol>
+</div>
+<div class="section" id="output-temporal-extent">
+<h3>Output temporal extent<a class="headerlink" href="#output-temporal-extent" title="Permalink to this headline">¶</a></h3>
+<img alt="_images/time_frame.png" src="_images/time_frame.png" />
+<ol class="arabic simple">
+<li><strong>Choose filing style</strong>: the available options are ‘CORDEX’ and  ‘IN-HOUSE’. CORDEX NetCDF filing style include one parameter per unit NetCDF file. Each file may have data for upto five or more years. In-HOUSE filing style, on the other hand, includes multiple parameters per unit NetCDF file. Each file may have one month or more worth of data. Note that the pipeline ouput NetCDF organised in CORDEX filing style.</li>
+<li><strong>Input Parameter(s)</strong>: one or more parameters may be provided. The provided parameters must be available within each of the input NetCDF files. The same statistical operation will be applied to all the listed paramters.</li>
+<li><strong>Spcify time frame</strong>: this is where the desired time for the ‘start data’ and ‘end date’ of the analysis period are specified. In a special case when the time-frame is the same as the input time-frame, the user may just select the option ‘Use input time-frame’.</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The data pipeline processed output is in CORDEX filing style. This is irrespective to the input filing style.</p>
+</div>
+<ol class="arabic simple">
+<li><dl class="first docutils">
+<dt><strong>Operator type</strong>: entails the main categories of accessible operator type namely statistial operators;</dt>
+<dd>(denoted <em>STATS.</em>); percentile operators (denoted <em>PCTL</em>); running statistical and percental operators denoted <em>RUNNING STATS.</em> and RUNNING <em>PCTL</em> repectively.
+Under each operator type the user will be prompted to key-in the ‘<em>key operator</em>’. The <em>input time scale</em> (which can be read from the input NetCDF files) and
+the <em>Ouput time scale</em> (This is the temporal resolution to which the key operator must map the data to).</dd>
+</dl>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="compound-operators-options">
+<h2>Compound operators options<a class="headerlink" href="#compound-operators-options" title="Permalink to this headline">¶</a></h2>
+<p>The temporal analysis operators are grouped into two main categories namely:
+<em>Pre-def. t-scale</em> and <em>user-def. t-scale</em>. These two main categories
+host a group of operators identified here as ‘Statistical (<em>STATS.</em>)’ and ‘percentiles (<em>PCNTL</em>)’
+<em>Pre-def. t-scale</em>  is used in the case when time steps of interest can be categorised using standard
+calender count of hours, days, months etc. In the case when standard calender time framing is
+not of interest (e.g., when the user need number of data sets other than th calender based sets) <em>user-def. t-scale</em> may be used.</p>
+<p>The compound operators gives the following statistical and arithmetic functions:</p>
+<ul class="simple">
+<li>minimum (MIN)</li>
+<li>maximum (MAX)</li>
+<li>range (RNG)</li>
+<li>summation (SUM)</li>
+<li>mean (MEAN)</li>
+<li>average (AVE)</li>
+<li>standard deviation (STD)</li>
+<li>variance (VAR) and Standard deviation (STD)</li>
+<li>weighted variance (VAR1) and Standard deviation (STD1)</li>
+<li>Percentiles (PCTL)</li>
+</ul>
+<p>The output time frames for the operators (as per the standard calender followed on the associated NetCDF file) include:</p>
+<ul class="simple">
+<li>hourly (hh)</li>
+<li>daily (dd)</li>
+<li>monthly (mm)</li>
+<li>seasonal (ss) - for only WMO seasons</li>
+<li>yearly (yy)</li>
+</ul>
+<p>For the above listed time scales, multi-year averages include:</p>
+<ul class="simple">
+<li>muti-year hourly (hh_MY)</li>
+<li>multi-year daily (dd_MY)</li>
+<li>multi-year monthly (mm_MY)</li>
+<li>multi-year seasonal (ss_MY) statistics.</li>
+</ul>
+<div class="section" id="a-user-def-t-scale-stats">
+<h3>a) User-Def. T-Scale (Stats.)<a class="headerlink" href="#a-user-def-t-scale-stats" title="Permalink to this headline">¶</a></h3>
+<img alt="_images/userdef1.png" src="_images/userdef1.png" />
+<p>Fig. 3.</p>
+<p>In this case the:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1. Noffset: INTEGER Number of input timesteps skipped before the
+             first timestep range
+
+2. Nsets: Number of input timesteps for each output file
+
+
+3. Nskip:   INTEGER Number of input timesteps skipped between
+             timestep ranges
+
+4. Operator:                    SELECT TIME STATS
+
+5. Statistical Operation:       Available options include:
+                                {MIN, MAX, RNG, SUM, MEAN, AVG, STD, VAR, STD1, VAR1}
+
+6. input and output time scale: In the case of hourly data, one preprocessing
+                                step will be included to ensure that the first midnight
+                                observation is not missing and that the last
+                                midnight observation does not lead to an extra
+                                time-step that is corresponding to the first date of the
+                                next month (which is an issue with some versions of CDO)
+</pre></div>
+</div>
+<p>The third column of the table below presents available CDO operators accessible under the compound
+operator.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="39%" />
+<col width="38%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Operator type</strong></td>
+<td><strong>Compund operator name-space</strong></td>
+<td><strong>Corresponding CDO operators</strong></td>
+</tr>
+<tr class="row-even"><td rowspan="9"><p class="first">Select time</p>
+<p class="last">(Statistical)</p>
+</td>
+<td>sltspMIN</td>
+<td>timselmin</td>
+</tr>
+<tr class="row-odd"><td>sltspMAX</td>
+<td>timselmax</td>
+</tr>
+<tr class="row-even"><td>sltsRNG</td>
+<td>timselrng</td>
+</tr>
+<tr class="row-odd"><td>sltspSUM</td>
+<td>timselsum</td>
+</tr>
+<tr class="row-even"><td>sltspMEAN</td>
+<td>timselmean</td>
+</tr>
+<tr class="row-odd"><td>sltspAVE</td>
+<td>timselave</td>
+</tr>
+<tr class="row-even"><td>sltspSTD</td>
+<td>timselstd</td>
+</tr>
+<tr class="row-odd"><td>sltspAVE1</td>
+<td>timselave1</td>
+</tr>
+<tr class="row-even"><td>sltspSTD1</td>
+<td>timselstd1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="b-user-def-t-scale-percentile">
+<h3>b) User-Def. T-scale (Percentile)<a class="headerlink" href="#b-user-def-t-scale-percentile" title="Permalink to this headline">¶</a></h3>
+<p>This operator computes percentile values over a selected number of timesteps in the input file
+and write the output to a file.</p>
+<p>The input options are:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1. Noffset:                      same as in (a)
+2. Nsets:                        same as in (a)
+3. Nskip:                        same as in (a)
+4. Operator Type:                SELECT TIME PCTL
+5. Statistical Operation:        PCNTL
+6. Input and 0utput Time Scale:  same as in (a)
+7. Percentile:                   FLOAT number in 0, ..., 100
+Note:
+The operator takes the value zero in the case of no noffset and nskip.
+</pre></div>
+</div>
+<p>the analysis options gives access to CDO operators tabled below:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="37%" />
+<col width="40%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Operator type</strong></td>
+<td><strong>Compund Operator name space</strong></td>
+<td><strong>Corresponding CDO operators</strong></td>
+</tr>
+<tr class="row-even"><td>Select time (PCNTL)</td>
+<td>sltspPCTL</td>
+<td><em>timselpctl</em>, timselmin, timselmax</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="c-pre-def-t-scale-stats">
+<h3>(c) Pre-Def. T-Scale (Stats.)<a class="headerlink" href="#c-pre-def-t-scale-stats" title="Permalink to this headline">¶</a></h3>
+<p>Computes statistical values from an input file over timesteps defined by the output time-scale
+and write the output to a file.</p>
+<img alt="_images/predef1.png" src="_images/predef1.png" />
+<p>Fig. 4.</p>
+<p>The input options are:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1. Operator Type: STATS.
+2. Statistical Operation: same as in (a)
+3. Input Time Scale: is used to filter the available output timescales for the operator.
+4. Output Time Scale: needed for specifying the appropriate CDO operators among available options under the compound operator. See Table 3.
+</pre></div>
+</div>
+<p>This analysis option gives access to a group of CDO operators tabled below.
+The graphical user interface is helpful in ensuring that only possible mappings are keyed in i.e.,
+mappings that transform data from higher to lower temporal resolution.</p>
+<p>Table 3.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="16%" />
+<col width="40%" />
+<col width="43%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Operator type</strong></td>
+<td><strong>Compund Operator name space</strong></td>
+<td><strong>Corresponding CDO operators</strong></td>
+</tr>
+<tr class="row-even"><td rowspan="9"><p class="first">Statistical</p>
+<p class="last">(STATS)</p>
+</td>
+<td>hhMIN, ddMIN,mmMIN, ssMIN, yyMIN,</td>
+<td>hourmin, daymin, monmin, seasmin, yearmin</td>
+</tr>
+<tr class="row-odd"><td>hhMAX, ddMAX, mmMAX, ssMAX, yyMAX</td>
+<td>hourmax, daymax, monmax, seasmax, yearmax</td>
+</tr>
+<tr class="row-even"><td>hhRNG, ddRNG, ssMAX, ssMAM, yyMAX</td>
+<td>hourrange, dayrange, monrange, seasrange, yearrange</td>
+</tr>
+<tr class="row-odd"><td>hhSUM, ddSUM, mmSUM, ssSUM, yyMAX</td>
+<td>hoursum, daysum, monsum, seassum, yearsum</td>
+</tr>
+<tr class="row-even"><td>hhMEAN, ddMEAN, mmMEAN, ssMEAN, yyMEAN</td>
+<td>hourmean, daymean, monmean, seasmean, yearean</td>
+</tr>
+<tr class="row-odd"><td>hhRNG, ddRNG, mmRNG, ssRNG, ssRNG</td>
+<td>hourrange, dayrange, monrange, seasrange, yearrange</td>
+</tr>
+<tr class="row-even"><td>hhAVE, ddAVE, mmAVE, ssAVE, yyAVE,</td>
+<td>hourave, dayave, monave, seasave, yearave</td>
+</tr>
+<tr class="row-odd"><td>hhSTD, ddSTD, mmSTD, ssSTD, yySTD</td>
+<td>hourstd, daystd, monstd, seasstd, yearstd</td>
+</tr>
+<tr class="row-even"><td>hhVAR, ddVAR ,mmVAR, ssVAR, yyVAR</td>
+<td>hourvar, dayvar, monvar, seasvar, yearsvar</td>
+</tr>
+<tr class="row-odd"><td rowspan="9">Multi-year
+statistics
+(MYSTATS)</td>
+<td>hhMYMIN, ddMYMIN,mmMYMIN, ssMYMIN</td>
+<td>yhourmin, ydaymin, ymonmin, yseasmin</td>
+</tr>
+<tr class="row-even"><td>hhMYMAX, ddMYMAX, mmMYMAX, ssMYMAX</td>
+<td>yhourmax, ydaymax, monmax, yseasmax</td>
+</tr>
+<tr class="row-odd"><td>hhMYRNG, ddMYRNG, ssMYMAX, ssMYMAM</td>
+<td>yhourrange, ydayrange, ymonrange, yseasrange</td>
+</tr>
+<tr class="row-even"><td>hhMYSUM, ddMYSUM, mmMYSUM, ssMYSUM</td>
+<td>yhoursum, ydaysum, ymonsum, yseassum, yearsum</td>
+</tr>
+<tr class="row-odd"><td>hhMYMEAN, ddMYMEAN, mmMYMEAN, ssMYMEAN</td>
+<td>yhourmean, ydaymean, ymonmean, yseasmean</td>
+</tr>
+<tr class="row-even"><td>hhMYRNG, ddMYRNG, mmMYRNG, ssMYRNG</td>
+<td>yhourrange, ydayrange, ymonrange, yseasrange</td>
+</tr>
+<tr class="row-odd"><td>hhMYAVE, ddMYAVE, mmMYAVE, ssMYAVE</td>
+<td>yhourave, ydayave, ymonave, yseasave</td>
+</tr>
+<tr class="row-even"><td>hhMYSTD, ddMYSTD, mmMYSTD, ssMYSTD</td>
+<td>yhourstd, ydaystd, ymonstd, yseasstd</td>
+</tr>
+<tr class="row-odd"><td>hhMYVAR, ddMYVAR ,mmMYVAR, ssMYVAR</td>
+<td>yhourvar, ydayvar, ymonvar, yseasvar</td>
+</tr>
+<tr class="row-even"><td rowspan="6"><p class="first">Mixed Operators</p>
+<p class="last">(Statistical and
+Multi-year
+Statistical)</p>
+</td>
+<td><dl class="first last docutils">
+<dt>daily sum to monthly mean</dt>
+<dd>(dd_SUM_mm_MEAN_STATS)</dd>
+</dl>
+</td>
+<td>daysum &amp;
+ymonmean</td>
+</tr>
+<tr class="row-odd"><td><dl class="first last docutils">
+<dt>daily sum to multi-year monthly mean</dt>
+<dd>(dd_SUM_mm_MYMEAN_STAT)</dd>
+</dl>
+</td>
+<td>daysum &amp;
+ymonmean</td>
+</tr>
+<tr class="row-even"><td>daily mean to multi-year monthly mean
+(dd_MEAN_mm_MYMEAN_STATS)</td>
+<td>daymean &amp;
+ymonmean</td>
+</tr>
+<tr class="row-odd"><td>daily sum to multi-year daily sum
+(dd_SUM_dd_MYSUM_ST)</td>
+<td>daysum &amp;
+ydaysum</td>
+</tr>
+<tr class="row-even"><td>Monthly sum to Annual mean
+(mm_SUM_yyMEAN_STAT)</td>
+<td>daysum &amp;
+yearmean</td>
+</tr>
+<tr class="row-odd"><td>Monthly sum to multi-year monthly
+(mm_SUM_mm_MYMEAN_STAT)</td>
+<td>monsum &amp;
+ymonmean</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="d-pre-def-t-scale-percentiles">
+<h3>(d) Pre-def. T-Scale (Percentiles)<a class="headerlink" href="#d-pre-def-t-scale-percentiles" title="Permalink to this headline">¶</a></h3>
+<p>This operator computes percentiles over all timesteps of the specified time-scale in the input file
+and write the ouput to a file.</p>
+<p>The user input options are:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1. Operator Type: PCNTL
+2. Statistical Operation: PCNTL)
+3. Input Time Scale: same as in (a)
+4. Output Time Scal: same as in (a)
+5. Percentile: same as in (a)
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The running window size should be set based on the input data characteristic time-steps. The analysis options give access to CDO operators tabled below:</p>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="39%" />
+<col width="38%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Operator type</strong></td>
+<td><strong>Compund Operator name space</strong></td>
+<td><strong>Corresponding CDO operators</strong></td>
+</tr>
+<tr class="row-even"><td rowspan="9"><p class="first">Percentile</p>
+<p class="last">(PCNTL)</p>
+</td>
+<td>hhPCTL</td>
+<td><em>hourpctl</em>, hourmin, hourmax</td>
+</tr>
+<tr class="row-odd"><td>ddPCTL</td>
+<td><em>daypctl</em>, daymin, daymax</td>
+</tr>
+<tr class="row-even"><td>mmPCTL</td>
+<td><em>monpctl</em>, monmin, monma</td>
+</tr>
+<tr class="row-odd"><td>ssPCTL</td>
+<td><em>seaspctl</em>, seasmin, seasmax</td>
+</tr>
+<tr class="row-even"><td>yyPCTL</td>
+<td><em>yearpctl</em>, yearmin, yearmax</td>
+</tr>
+<tr class="row-odd"><td>hhMYPCTL</td>
+<td><em>yhourpctl</em>, yhourmin, yhourmax</td>
+</tr>
+<tr class="row-even"><td>ddMYPCTL</td>
+<td><em>ydaypctl</em>, ydaymin, ydaymax</td>
+</tr>
+<tr class="row-odd"><td>ssMYPCTL</td>
+<td><em>yseaspctl</em>, yseasmin, ydaymax</td>
+</tr>
+<tr class="row-even"><td>yyMYPCTL</td>
+<td>NA</td>
+</tr>
+</tbody>
+</table>
+<p>The operators are can be applied to hourly, daily, monthly, seasonal as well as yearly data.</p>
+</div>
+<div class="section" id="e-pre-def-analysis-running-stats">
+<h3>(e) Pre-def. analysis (running stats.)<a class="headerlink" href="#e-pre-def-analysis-running-stats" title="Permalink to this headline">¶</a></h3>
+<p>Computes running statistical values over a selected number of time-steps in the input file
+and writes the output to a file.</p>
+<p>The input options are:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1. Operator Type: RUNNING STATS.
+2. Statistical Operation: same as in (a)
+3. Input and Output time scale : the input and output time scale must be the same.
+4. Running Window size: INTEGER, number of timesteps
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The operators can be applied to hourly, daily, monthly, seasonal as well as yearly data. The running size should be based on the data characteristic time steps. The analysis options give access to CDO operators tabled below:</p>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="39%" />
+<col width="38%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Operator type</strong></td>
+<td><strong>Compund Operator name space</strong></td>
+<td><strong>Corresponding CDO operators</strong></td>
+</tr>
+<tr class="row-even"><td rowspan="11"><p class="first">Statistical</p>
+<p class="last">(STATS)</p>
+</td>
+<td>RUNMIN</td>
+<td>runmin</td>
+</tr>
+<tr class="row-odd"><td>RUNMAX</td>
+<td>runmax</td>
+</tr>
+<tr class="row-even"><td>RUNRNG</td>
+<td>runrange</td>
+</tr>
+<tr class="row-odd"><td>RUNSUM</td>
+<td>runsum</td>
+</tr>
+<tr class="row-even"><td>RUNMEAN</td>
+<td>runmean</td>
+</tr>
+<tr class="row-odd"><td>RUNRNG</td>
+<td>runrange</td>
+</tr>
+<tr class="row-even"><td>RUNAVE</td>
+<td>runrave</td>
+</tr>
+<tr class="row-odd"><td>RUNSTD</td>
+<td>runrstd</td>
+</tr>
+<tr class="row-even"><td>RUNVAR</td>
+<td>runvar</td>
+</tr>
+<tr class="row-odd"><td>RUNSTD1</td>
+<td>runrstd1</td>
+</tr>
+<tr class="row-even"><td>RUNVAR1</td>
+<td>runvar1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="f-pre-def-t-scale-running-muti-yr-stats">
+<h3>(f) Pre-Def. T-Scale (Running Muti-Yr Stats.)<a class="headerlink" href="#f-pre-def-t-scale-running-muti-yr-stats" title="Permalink to this headline">¶</a></h3>
+<p>Computes running percentiles over a selected number of timesteps in input file.</p>
+<p>The input options are:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1. Operator Type: MULTI YEAR RUNN. STATS.
+2. Statistical Operation: same as in (a)
+3. Input Time Scale and : takes only hourly and daily but the key operator is defined for only daily data.
+4. Output Time Scale: in the case of hourly input data the user must also specify how to aggregate the input data to daily time scale.
+5. Running Window Size: same as in (e)
+6. Percentile: same as in (b)
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><em>The Pre-def. T-scale</em> (running muti-year stats.) operator works with only daily data as input.the analysis options gives access to CDO operators tabled below:</p>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="42%" />
+<col width="36%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Operator type</strong></td>
+<td><strong>Compund Operator name space</strong></td>
+<td><strong>Corresponding CDO operators</strong></td>
+</tr>
+<tr class="row-even"><td rowspan="11"><p class="first">Statistical</p>
+<p class="last">(STATS)</p>
+</td>
+<td>ddMYRUNMIN</td>
+<td>ydrunmin</td>
+</tr>
+<tr class="row-odd"><td>ddMYRUNMAX</td>
+<td>ydrunmax</td>
+</tr>
+<tr class="row-even"><td>ddMYRUNRNG</td>
+<td>ydrunrange</td>
+</tr>
+<tr class="row-odd"><td>ddMYRUNSUM</td>
+<td>ydrunsum</td>
+</tr>
+<tr class="row-even"><td>ddMYRUNMEAN</td>
+<td>ydrunmean</td>
+</tr>
+<tr class="row-odd"><td>ddMYRUNRNG</td>
+<td>ydrunrange</td>
+</tr>
+<tr class="row-even"><td>ddMYRUNAVE</td>
+<td>ydrunrave</td>
+</tr>
+<tr class="row-odd"><td>ddMYRUNSTD</td>
+<td>ydrunrstd</td>
+</tr>
+<tr class="row-even"><td>ddMYRUNVAR</td>
+<td>ydrunrva</td>
+</tr>
+<tr class="row-odd"><td>ddMYRUNSTD1</td>
+<td>ydrunrstd1</td>
+</tr>
+<tr class="row-even"><td>ddMYRUNVAR1</td>
+<td>ydrunrva1</td>
+</tr>
+</tbody>
+</table>
+<p>In the case when hourly data is given as an input, the compound operator prompts the user to
+sum or average it to daily using (CDO daymean).</p>
+<p>The running window size, in this case, must be an interger which is based on the  characteristic time steps as per the input files.</p>
+</div>
+<div class="section" id="g-pre-def-t-scale-running-multi-yr-percentiles">
+<h3>(g) Pre-def. T-Scale (Running Multi-Yr Percentiles)<a class="headerlink" href="#g-pre-def-t-scale-running-multi-yr-percentiles" title="Permalink to this headline">¶</a></h3>
+<p>The operator writes running percentile values for each day of the year to an output file.</p>
+<img alt="_images/myrun_stats.png" src="_images/myrun_stats.png" />
+<p>Fig. 5.</p>
+<p>The input obtions are:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1. Operator Type: MULT YEAR RUNN. STATS.
+2. Statistical Operation: PCNTL
+3. Input Time Scale and: same as in (f)
+4. Output Time Scale: same as in (f)
+5. Percentile:   FLOAT number in 0, ..., 100
+6. Running Window Size: INTEGER number of timesteps
+</pre></div>
+</div>
+<p>the analysis options gives access to CDO operators tabled below:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="39%" />
+<col width="38%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Operator type</strong></td>
+<td><strong>Compund operator Name Space</strong></td>
+<td><strong>Corresponding CDO operators</strong></td>
+</tr>
+<tr class="row-even"><td>Percentile (PCNTL)</td>
+<td>ddMYRUNPCTL</td>
+<td><em>ydrunpctl</em>, ydrunmin, ydrunmax</td>
+</tr>
+</tbody>
+</table>
+<p>The running percentile CDO operator is intended for daily data only.
+In the case when hourly data is given as an input, the compound operator prompts the user to
+apply the sum or average in order to aggregate the data to daily values using (CDO daymean or daysum).
+The running window size in this case must be an interger
+(which takes into account the data characteristic time steps as per each NetCDF file).</p>
+</div>
+</div>
+<div class="section" id="excecution">
+<h2>Excecution<a class="headerlink" href="#excecution" title="Permalink to this headline">¶</a></h2>
+<p>In order to excecute the selected data analysis operation, the <strong>save</strong> button should be selected.
+This will pass all the user inputs to an input text file ‘intext.txt’. The generated text file can also be used as a text user interface (TUI) in the case when a remote server is being used for analysis. To run the analysis using the graphical
+interface select the button ‘Run’ on the top menu panel.</p>
+<p>If a paramter for temperature is selected in ‘tas’ in the example shown in fig. 1, the
+output file structure will look like the one presented in fig. 6</p>
+<img alt="_images/dir_struc_out.jpg" src="_images/dir_struc_out.jpg" />
+<p>Fig. 6.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">User documentation</a><ul>
+<li><a class="reference internal" href="#build-from-sources">Build from sources</a></li>
+<li><a class="reference internal" href="#user-inputs">User inputs</a><ul>
+<li><a class="reference internal" href="#input-and-ouput-file-structure">Input and ouput file structure</a></li>
+<li><a class="reference internal" href="#output-spatial-extent">Output spatial extent</a></li>
+<li><a class="reference internal" href="#output-temporal-extent">Output temporal extent</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#compound-operators-options">Compound operators options</a><ul>
+<li><a class="reference internal" href="#a-user-def-t-scale-stats">a) User-Def. T-Scale (Stats.)</a></li>
+<li><a class="reference internal" href="#b-user-def-t-scale-percentile">b) User-Def. T-scale (Percentile)</a></li>
+<li><a class="reference internal" href="#c-pre-def-t-scale-stats">(c) Pre-Def. T-Scale (Stats.)</a></li>
+<li><a class="reference internal" href="#d-pre-def-t-scale-percentiles">(d) Pre-def. T-Scale (Percentiles)</a></li>
+<li><a class="reference internal" href="#e-pre-def-analysis-running-stats">(e) Pre-def. analysis (running stats.)</a></li>
+<li><a class="reference internal" href="#f-pre-def-t-scale-running-muti-yr-stats">(f) Pre-Def. T-Scale (Running Muti-Yr Stats.)</a></li>
+<li><a class="reference internal" href="#g-pre-def-t-scale-running-multi-yr-percentiles">(g) Pre-def. T-Scale (Running Multi-Yr Percentiles)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#excecution">Excecution</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="project.html" title="previous chapter">Project Summary</a></li>
+      <li>Next: <a href="code.html" title="next chapter">Pipeline GUI implimentation</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tutorial.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, CSIR.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/tutorial.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
